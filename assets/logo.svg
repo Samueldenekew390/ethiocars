@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <defs>
+    <linearGradient id="evGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Car Silhouette & Plug Icon -->
+  <g transform="translate(6, 6)">
+    <!-- Shield / Badge background -->
+    <rect x="0" y="0" width="48" height="48" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
+    
+    <!-- EV Car Shape -->
+    <path d="M10 26 C12 21, 16 17, 24 17 C32 17, 36 21, 38 26 L42 27 C43 27, 44 28, 44 30 L44 34 C44 35, 43 36, 42 36 L40 36 C40 38, 38 40, 35 40 C32 40, 30 38, 30 36 L18 36 C18 38, 16 40, 13 40 C10 40, 8 38, 8 36 L6 36 C5 36, 4 35, 4 34 L4 30 C4 28, 5 27, 6 27 Z" fill="url(#evGrad)" />
+    
+    <!-- Car Wheels -->
+    <circle cx="13" cy="36" r="3" fill="#ffffff" stroke="#059669" stroke-width="1.5" />
+    <circle cx="35" cy="36" r="3" fill="#ffffff" stroke="#059669" stroke-width="1.5" />
+    
+    <!-- Lightning Flash inside car -->
+    <path d="M25 19 L21 27 L25 27 L23 33 L29 25 L25 25 Z" fill="url(#goldGrad)" />
+  </g>
+  
+  <!-- Amharic Brand Typography -->
+  <text x="64" y="27" font-family="'Noto Sans Ethiopic', 'Nyala', 'Abyssinica SIL', sans-serif" font-size="17" font-weight="700" fill="#0f172a">ኢትዮ ኤሌክትሪክ መኪኖች</text>
+  <text x="64" y="44" font-family="'Noto Sans Ethiopic', 'Nyala', 'Abyssinica SIL', sans-serif" font-size="12" font-weight="500" fill="#059669">አስመጭና አከፋፋይ</text>
+</svg>

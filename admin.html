@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="am" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>የአስተዳዳሪ ዳሽቦርድ | ኢትዮ ኤሌክትሪክ መኪኖች</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="admin-body">
+
+  <!-- ====================================================================
+       1. ADMIN AUTHENTICATION SCREEN (LOGIN)
+       ==================================================================== -->
+  <div id="admin-login-screen" class="admin-login-screen">
+    <div class="admin-login-card">
+      <div class="admin-login-header">
+        <img src="assets/logo.svg" alt="ኢትዮ ኤሌክትሪክ መኪኖች" class="admin-login-logo" />
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">የአስተዳዳሪ መግቢያ</h2>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">የሱፓቤዝ (Supabase) የአስተዳዳሪ አካውንትዎን ያስገቡ</p>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group">
+          <label class="form-label" for="login-email">ኢሜይል</label>
+          <input type="email" id="login-email" class="form-control" placeholder="admin@ethioelectriccars.et" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">የይለፍ ቃል</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="login-submit-btn" style="width: 100%; margin-top: 0.5rem;">
+          <span>ግባ</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="index.html" style="color: var(--primary); font-size: 0.875rem; text-decoration: underline;">
+          &larr; ወደ ዋናው የህዝብ ገጽ ተመለስ
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       2. ADMIN MAIN DASHBOARD LAYOUT (PROTECTED)
+       ==================================================================== -->
+  <div id="admin-dashboard-layout" class="admin-layout" style="display: none;">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div class="admin-sidebar-title">ኢትዮ ኤሌክትሪክ መኪኖች</div>
+        <span class="admin-sidebar-badge">የአስተዳደር ፓነል</span>
+      </div>
+
+      <ul class="admin-menu">
+        <li class="admin-menu-item active" id="menu-overview">
+          <button type="button" onclick="switchAdminTab('overview')">
+            <span>📊</span> <span>ዳሽቦርድ</span>
+          </button>
+        </li>
+        <li class="admin-menu-item" id="menu-vehicles">
+          <button type="button" onclick="switchAdminTab('vehicles')">
+            <span>🚘</span> <span>የመኪና ሞዴሎች</span>
+          </button>
+        </li>
+        <li class="admin-menu-item" id="menu-applications">
+          <button type="button" onclick="switchAdminTab('applications')">
+            <span>📝</span> <span>የግዢ ማመልከቻዎች</span>
+          </button>
+        </li>
+        <li class="admin-menu-item" id="menu-payment">
+          <button type="button" onclick="switchAdminTab('payment')">
+            <span>💳</span> <span>የክፍያ መረጃ</span>
+          </button>
+        </li>
+        <li class="admin-menu-item" id="menu-settings">
+          <button type="button" onclick="switchAdminTab('settings')">
+            <span>⚙️</span> <span>የድር ጣቢያ ቅንብሮች</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <button type="button" class="btn btn-secondary" onclick="handleAdminLogout()" style="width: 100%; background: #1e293b; color: #f8fafc; border-color: #334155;">
+          <span>🚪</span> <span>ውጣ</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main-content">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <h1 class="admin-page-title" id="admin-header-title">ዳሽቦርድ</h1>
+        <div class="admin-user-info">
+          <a href="index.html" class="btn btn-secondary btn-sm" target="_blank">
+            <span>🌐 ጣቢያውን እይ</span>
+          </a>
+          <span class="admin-email-text" id="admin-user-email">admin@ethioelectriccars.et</span>
+        </div>
+      </header>
+
+      <div class="admin-content-area">
+
+        <!-- TAB 1: OVERVIEW & STATISTICS -->
+        <section id="tab-overview" class="admin-tab-section">
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon green">🚘</div>
+              <div class="stat-info">
+                <span class="stat-label">ጠቅላላ መኪኖች</span>
+                <span class="stat-num" id="stat-total-vehicles">0</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon amber">⏳</div>
+              <div class="stat-info">
+                <span class="stat-label">አዲስ ማመልከቻዎች</span>
+                <span class="stat-num" id="stat-pending-apps">0</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon blue">✅</div>
+              <div class="stat-info">
+                <span class="stat-label">የተፈቀዱ</span>
+                <span class="stat-num" id="stat-approved-apps">0</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon purple">⚡</div>
+              <div class="stat-info">
+                <span class="stat-label">የተገኙ ሞዴሎች</span>
+                <span class="stat-num" id="stat-available-models">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Applications Preview -->
+          <div class="table-card">
+            <div class="table-header-bar">
+              <h3 style="font-size: 1.15rem;">የቅርብ ጊዜ የግዢ ማመልከቻዎች</h3>
+              <button class="btn btn-secondary btn-sm" onclick="switchAdminTab('applications')">ሁሉንም እይ &rarr;</button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>የሞዴል ስም</th>
+                    <th>የመኪና ዋጋ</th>
+                    <th>ስልክ ቁጥር</th>
+                    <th>የምዝገባ ቀን</th>
+                    <th>ሁኔታ</th>
+                    <th>እርምጃ</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-recent-apps-tbody">
+                  <tr><td colspan="6" style="text-align: center; color: #64748b;">ማመልከቻዎች በመጫን ላይ ናቸው...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: VEHICLE MANAGEMENT -->
+        <section id="tab-vehicles" class="admin-tab-section" style="display: none;">
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div>
+                <h3 style="font-size: 1.25rem;">የመኪና ሞዴሎች ዝርዝር</h3>
+                <span style="color: var(--text-light); font-size: 0.85rem;">አዳዲስ መኪኖችን ያክሉ፣ ያርትዑ ወይም ይሰርዙ</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openVehicleModal()">
+                <span>➕ አዲስ መኪና ጨምር</span>
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ፎቶ</th>
+                    <th>የሞዴል ስም</th>
+                    <th>መቀመጫ</th>
+                    <th>ዋጋ (ብር)</th>
+                    <th>የጉዞ ርቀት</th>
+                    <th>ተገኝነት</th>
+                    <th>እርምጃዎች</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-vehicles-tbody">
+                  <tr><td colspan="7" style="text-align: center; color: #64748b;">መኪኖች በመጫን ላይ ናቸው...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: PURCHASE APPLICATIONS -->
+        <section id="tab-applications" class="admin-tab-section" style="display: none;">
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div>
+                <h3 style="font-size: 1.25rem;">የደንበኞች የግዢ ማመልከቻዎች</h3>
+                <span style="color: var(--text-light); font-size: 0.85rem;">የተላኩ መታወቂያዎችን፣ ጉርድ ፎቶዎችንና ደረሰኞችን ይመርምሩ</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" onclick="loadAdminApplications()">🔄 አድስ</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>የሞዴል ስም</th>
+                    <th>የመኪና ዋጋ</th>
+                    <th>ስልክ ቁጥር</th>
+                    <th>የሚላክበት ሀገር</th>
+                    <th>የምዝገባ ቀን</th>
+                    <th>ሁኔታ</th>
+                    <th>ሰነዶች</th>
+                    <th>እርምጃዎች</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-applications-tbody">
+                  <tr><td colspan="8" style="text-align: center; color: #64748b;">ማመልከቻዎች በመጫን ላይ ናቸው...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: PAYMENT SETTINGS (CBE ACCOUNT) -->
+        <section id="tab-payment" class="admin-tab-section" style="display: none;">
+          <div class="table-card" style="max-width: 650px;">
+            <div class="table-header-bar">
+              <div>
+                <h3 style="font-size: 1.25rem;">የባንክ ሂሳብ እና የክፍያ መረጃ</h3>
+                <span style="color: var(--text-light); font-size: 0.85rem;">እዚህ የሚቀይሩት መረጃ በህዝብ ማመልከቻ ቅጽ ላይ ወዲያውኑ ይታያል</span>
+              </div>
+            </div>
+
+            <form id="admin-payment-form" onsubmit="handleSavePaymentSettings(event)" style="padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+              <div class="form-group">
+                <label class="form-label" for="setting-cbe-account">የባንክ ሂሳብ ቁጥር (CBE Account)</label>
+                <input 
+                  type="text" 
+                  id="setting-cbe-account" 
+                  class="form-control" 
+                  placeholder="CBE: 1000245519668" 
+                  required 
+                />
+                <span class="form-hint">ምሳሌ፦ CBE: 1000245519668</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-cbe-instructions">የክፍያ መመሪያ</label>
+                <textarea 
+                  id="setting-cbe-instructions" 
+                  class="form-control" 
+                  rows="3" 
+                  placeholder="የ 10% የቅድመ ክፍያ በኢትዮጵያ ንግድ ባንክ..."
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btn-save-payment-settings">
+                <span>አስቀምጥ</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- TAB 5: SITE SETTINGS -->
+        <section id="tab-settings" class="admin-tab-section" style="display: none;">
+          <div class="table-card" style="max-width: 750px;">
+            <div class="table-header-bar">
+              <div>
+                <h3 style="font-size: 1.25rem;">የድር ጣቢያ አጠቃላይ ቅንብሮች</h3>
+                <span style="color: var(--text-light); font-size: 0.85rem;">የስልክ ቁጥሮችን፣ ኢሜይልን እና የድረ-ገጹን ጽሁፎች ያስተካክሉ</span>
+              </div>
+            </div>
+
+            <form id="admin-general-settings-form" onsubmit="handleSaveGeneralSettings(event)" style="padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+              <div class="form-group">
+                <label class="form-label" for="setting-business-phone">የድርጅቱ ስልክ ቁጥር</label>
+                <input type="text" id="setting-business-phone" class="form-control" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-business-email">የድርጅቱ ኢሜይል</label>
+                <input type="email" id="setting-business-email" class="form-control" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-business-address">የድርጅቱ አድራሻ</label>
+                <input type="text" id="setting-business-address" class="form-control" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-hero-title">የመነሻ ዋና አርዕስት (Hero Title)</label>
+                <input type="text" id="setting-hero-title" class="form-control" required />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btn-save-general-settings">
+                <span>ቅንብሮችን አስቀምጥ</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       ADD / EDIT VEHICLE MODAL
+       ==================================================================== -->
+  <div class="modal-overlay" id="admin-vehicle-modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="vehicle-modal-title">አዲስ መኪና ጨምር</h2>
+        <button class="modal-close-btn" onclick="closeVehicleModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="admin-vehicle-form" onsubmit="handleSaveVehicle(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <input type="hidden" id="veh-edit-id" value="" />
+
+          <div class="form-group">
+            <label class="form-label" for="veh-model-name">የሞዴል ስም <span class="required">*</span></label>
+            <input type="text" id="veh-model-name" class="form-control" placeholder="ምሳሌ፦ ኢትዮ ኢ-ጎልፍ ቪዥን 4S" required />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="veh-seats">የመቀመጫ ብዛት <span class="required">*</span></label>
+              <input type="number" id="veh-seats" class="form-control" min="1" max="50" value="4" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="veh-price">ዋጋ በኢትዮጵያ ብር <span class="required">*</span></label>
+              <input type="number" id="veh-price" class="form-control" min="0" placeholder="1850000" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="veh-range">የጉዞ ርቀት (ኪ.ሜ) <span class="required">*</span></label>
+              <input type="number" id="veh-range" class="form-control" min="0" placeholder="120" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="veh-speed">ከፍተኛ ፍጥነት (ኪ.ሜ/ሰ) <span class="required">*</span></label>
+              <input type="number" id="veh-speed" class="form-control" min="0" placeholder="45" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="veh-motor">የሞተር እና ባትሪ አቅም (V / KW) <span class="required">*</span></label>
+            <input type="text" id="veh-motor" class="form-control" placeholder="ምሳሌ፦ 72V / 5.0 KW (Li-ion 105Ah)" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="veh-image-file">የመኪናው ፎቶ (ፋይል ይስቀሉ ወይም ሊንክ ያስገቡ)</label>
+            <input type="file" id="veh-image-file" class="form-control" accept="image/*" />
+            <span class="form-hint">ፎቶ ለመቀየር ወይም አዲስ ለመስቀል ይምረጡ</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="veh-image-url">ወይም የፎቶ ሊንክ (Image URL)</label>
+            <input type="url" id="veh-image-url" class="form-control" placeholder="https://..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="veh-desc">ዝርዝር ማብራሪያ</label>
+            <textarea id="veh-desc" class="form-control" rows="3" placeholder="ስለ መኪናው ዝርዝር መረጃ..."></textarea>
+          </div>
+
+          <div style="display: flex; gap: 2rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="veh-available" checked />
+              <span>በክምችት አለ (Available)</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="veh-featured" />
+              <span>ልዩ ሞዴል (Featured)</span>
+            </label>
+          </div>
+
+          <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: flex-end;">
+            <button type="button" class="btn btn-secondary" onclick="closeVehicleModal()">ሰርዝ</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-vehicle">አስቀምጥ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       APPLICATION DOCUMENTS VIEWER MODAL (PRIVATE SECURE SIGNED URLS)
+       ==================================================================== -->
+  <div class="modal-overlay" id="admin-doc-modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="doc-modal-applicant-title">የደንበኛ ማመልከቻ ሰነዶች</h2>
+        <button class="modal-close-btn" onclick="closeDocModal()">✕</button>
+      </div>
+
+      <div class="modal-body" id="doc-modal-content">
+        <div style="text-align: center; padding: 2rem;">ሰነዶች በመጫን ላይ ናቸው...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- SUPABASE JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

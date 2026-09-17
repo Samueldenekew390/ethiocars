@@ -1,0 +1,6 @@
+{
+  "name": "ኢትዮ ኤሌክትሪክ መኪኖች አስመጭና አከፋፋይ",
+  "description": "ኢትዮ ኤሌክትሪክ መኪኖች አስመጭና አከፋፋይ — የዘመናዊ መጓጓዣ ምርጫ! ጥራት ያላቸው ዘመናዊ የኤሌክትሪክ መኪኖችና የጎልፍ መኪናዎች በኢትዮጵያ።",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
